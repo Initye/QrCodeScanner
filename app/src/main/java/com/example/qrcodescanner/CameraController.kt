@@ -1,6 +1,8 @@
 package com.example.qrcodescanner
 
+import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -18,6 +20,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.qrcodescanner.ui.Pages.NoPermission
 
 @Composable
 fun CameraController() {
@@ -48,7 +52,6 @@ fun CameraController() {
                 )
 
             }, ContextCompat.getMainExecutor(context))
-
             previewView //Need to return in AndroidView
         },
     )
@@ -56,26 +59,29 @@ fun CameraController() {
 
 @Composable
 fun CameraHandler() {
+    val openDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     var hasPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
                 context,
-                android.Manifest.permission.CAMERA //Checking if app has camera permission
+                Manifest.permission.CAMERA //Checking if app has camera permission
             ) == PackageManager.PERMISSION_GRANTED //Boolean checking, returns true if permission granted
         )
     }
-
+    Log.d("CameraHandler", "CameraHandler composed with callback")
     val permissionsRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted -> hasPermission = granted } //Setting the
+        onResult = { granted -> hasPermission = granted } //Setting the granted
     )
 
     if(hasPermission) {
         CameraController()
     } else {
-        Text(
-            text = "xddd nie masz permisji"
+        NoPermission(
+            onRequestPermission = {
+                permissionsRequest.launch(Manifest.permission.CAMERA)
+            }, openDialog = openDialog
         )
     }
 }
