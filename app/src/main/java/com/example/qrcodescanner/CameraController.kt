@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -20,14 +21,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.qrcodescanner.ui.Pages.NoPermission
 
 @Composable
-fun CameraController() {
-    val context = LocalContext.current
-
+fun CameraController(modifier: Modifier = Modifier) {
     AndroidView(
+        modifier = modifier,
         factory = { context ->
             val previewView = PreviewView(context)
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -46,11 +47,30 @@ fun CameraController() {
                     .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build()
 
-                //Attach use cases to the camera with the same lifecycle owner
-                val camera = cameraProvider.bindToLifecycle(
-                    context as LifecycleOwner, cameraSelector, preview
-                )
+                val imageAnalysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+                    .also { analysis ->
+                        analysis.setAnalyzer(
+                            ContextCompat.getMainExecutor(context) ,
+                            ImageAnalyzer { qrCodeValue -> //rawValue
+                                Log.d("Result QRcode", "$qrCodeValue") //Logs the QR code text
+                            }
+                        )
+                    }
+                try {
+                    cameraProvider.unbindAll()
 
+                    //Attach use cases to the camera with the same lifecycle owner
+                    cameraProvider.bindToLifecycle(
+                        context as LifecycleOwner,
+                        cameraSelector,
+                        preview,
+                        imageAnalysis
+                    )
+                } catch (e: Exception) {
+                    Log.e("CameraController","Binding failed $e")
+                }
             }, ContextCompat.getMainExecutor(context))
             previewView //Need to return in AndroidView
         },
@@ -58,7 +78,7 @@ fun CameraController() {
 }
 
 @Composable
-fun CameraHandler() {
+fun CameraHandler(modifier: Modifier = Modifier) {
     val openDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     var hasPermission by remember {
@@ -76,7 +96,7 @@ fun CameraHandler() {
     )
 
     if(hasPermission) {
-        CameraController()
+        CameraController(modifier = modifier)
     } else {
         NoPermission(
             onRequestPermission = {

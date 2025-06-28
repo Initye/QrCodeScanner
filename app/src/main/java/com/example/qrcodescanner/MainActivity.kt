@@ -19,8 +19,14 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.qrcodescanner.ui.Pages.MainPage
 import com.example.qrcodescanner.ui.theme.QrCodeScannerTheme
 
 
@@ -45,8 +52,10 @@ class MainActivity : ComponentActivity() {
         @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
         setContent {
             QrCodeScannerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CameraHandler()
+                Scaffold(modifier = Modifier.fillMaxSize() ) { innerPadding ->
+                    Column(modifier = Modifier.systemBarsPadding()) {
+                        MainPage()
+                    }
                 }
             }
         }
