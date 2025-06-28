@@ -1,104 +1,73 @@
 package com.example.qrcodescanner.ui.Pages
 
-import android.R.attr.onClick
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.qrcodescanner.R
 
-import androidx.lifecycle.viewmodel.compose.viewModel
-
 @Composable
-fun NoPermission(modifier: Modifier = Modifier, onRequestPermission: () -> Unit, openDialog: MutableState<Boolean>) {
-    Box(
+fun Header(modifier: Modifier = Modifier) {
+    Text(
+        text = "QR Scanner",
         modifier = modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .height(50.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(align = Alignment.CenterVertically),
+        textAlign = TextAlign.Center,
+    )
+}
+
+@Composable
+fun BottomNav(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .height(100.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Info,
-                contentDescription = "Info",
-                modifier = modifier
-                    .clickable(onClick = { openDialog.value = true })
-            )
-            Text(
-                text = stringResource(id = R.string.noPermission),
-                textAlign = TextAlign.Center
-            )
-            Button(onClick = { onRequestPermission(); Log.d("Clicked","permission request") }) {
-                Text("Grant permission")
-            }
-        }
-    }
-
-    if(openDialog.value) {
-        InfoDialog(openDialog = openDialog)
-    }
-
-}
-
-@Composable
-fun InfoDialog(openDialog: MutableState<Boolean>) {
-    Dialog(onDismissRequest = { openDialog.value = false }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Text(
-                text = stringResource(id = R.string.requestPermissionInfo),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center),
-                textAlign = TextAlign.Center,
-            )
-        }
+        BottomNavItem(Icons.Default.AddCircle, R.string.QrScanner, R.string.QrScanner)
+        BottomNavItem(Icons.Default.ArrowDropDown, R.string.History, R.string.History)
+        BottomNavItem(Icons.Default.Settings, R.string.Settings, R.string.Settings)
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
+fun BottomNavItem(icon: ImageVector, text: Int, description: Int) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(icon, contentDescription = stringResource(id = description))
+        Text(text = stringResource(id = text))
+    }
+}
+
 @Preview
-fun NoPermissionPreview() {
-    NoPermission(onRequestPermission = {}, openDialog = mutableStateOf(false))
+@Composable
+fun HeaderPreview() {
+    Header()
 }
 
-@SuppressLint("UnrememberedMutableState")
-@Composable
 @Preview
-fun MinimalDialogPreview() {
-    InfoDialog(openDialog = mutableStateOf(false))
+@Composable
+fun BottomNavPreview() {
+    BottomNav()
 }
