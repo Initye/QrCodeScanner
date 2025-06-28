@@ -2,4 +2,7 @@
     <string name="app_name">QrCodeScanner</string>
     <string name="noPermission">No permission for using camera</string>
     <string name="requestPermissionInfo">"To scan QR codes, please enable Camera permission in your device Settings > Apps > QR Code Scanner > Permissions."</string>
+    <string name="QrScanner">QR Scanner</string>
+    <string name="History">History</string>
+    <string name="Settings">Settings</string>
 </resources>
