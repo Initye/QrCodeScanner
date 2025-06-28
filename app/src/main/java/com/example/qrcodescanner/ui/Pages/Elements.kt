@@ -28,7 +28,7 @@ import com.example.qrcodescanner.R
 @Composable
 fun Header(modifier: Modifier = Modifier) {
     Text(
-        text = "QR Scanner",
+        text = stringResource(id = R.string.QrScanner),
         modifier = modifier
             .height(50.dp)
             .fillMaxWidth()
