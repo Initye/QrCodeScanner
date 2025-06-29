@@ -1,5 +1,8 @@
 package com.example.qrcodescanner.ui.Pages
 
+import android.R.attr.onClick
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,12 +26,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.qrcodescanner.R
 
 @Composable
 fun Header(modifier: Modifier = Modifier) {
     Text(
-        text = "QR Scanner",
+        text = stringResource(id = R.string.QrScanner),
         modifier = modifier
             .height(50.dp)
             .fillMaxWidth()
@@ -38,7 +43,7 @@ fun Header(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BottomNav(modifier: Modifier = Modifier) {
+fun BottomNav(navController: NavController, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .height(100.dp)
@@ -46,15 +51,15 @@ fun BottomNav(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BottomNavItem(Icons.Default.AddCircle, R.string.QrScanner, R.string.QrScanner)
-        BottomNavItem(Icons.Default.ArrowDropDown, R.string.History, R.string.History)
-        BottomNavItem(Icons.Default.Settings, R.string.Settings, R.string.Settings)
+        BottomNavItem(Icons.Default.AddCircle, R.string.QrScanner, R.string.QrScanner, onClick = { navController.navigate("mainPage"); ; Log.d("Navigation", "mainPage") })
+        BottomNavItem(Icons.Default.ArrowDropDown, R.string.History, R.string.History, onClick = { navController.navigate("historyPage"); Log.d("Navigation", "History") })
+        BottomNavItem(Icons.Default.Settings, R.string.Settings, R.string.Settings, onClick = {})
     }
 }
 
 @Composable
-fun BottomNavItem(icon: ImageVector, text: Int, description: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun BottomNavItem(icon: ImageVector, text: Int, description: Int, onClick: () -> Unit ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
         Icon(icon, contentDescription = stringResource(id = description))
         Text(text = stringResource(id = text))
     }
@@ -69,5 +74,5 @@ fun HeaderPreview() {
 @Preview
 @Composable
 fun BottomNavPreview() {
-    BottomNav()
+    BottomNav(navController = rememberNavController())
 }

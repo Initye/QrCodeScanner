@@ -51,7 +51,7 @@ fun NoPermission(modifier: Modifier = Modifier, onRequestPermission: () -> Unit,
                 textAlign = TextAlign.Center
             )
             Button(onClick = { onRequestPermission(); Log.d("Clicked","permission request") }) {
-                Text("Grant permission")
+                Text(stringResource(id = R.string.GrantPermission))
             }
         }
     }

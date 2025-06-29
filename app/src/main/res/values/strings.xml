@@ -5,4 +5,5 @@
     <string name="QrScanner">QR Scanner</string>
     <string name="History">History</string>
     <string name="Settings">Settings</string>
+    <string name="GrantPermission">Grant Permission</string>
 </resources>

@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.qrcodescanner.CameraHandler
 
 @Composable
@@ -28,10 +30,8 @@ fun MainPage() {
         Header()
         CameraHandler(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.9f) // Takes 80% of remaining height
+                .fillMaxSize()
         )
-        BottomNav()
     }
 }
 
