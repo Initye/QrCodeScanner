@@ -11,6 +11,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.qrcodescanner.ui.Pages.NoPermission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,6 +40,7 @@ fun CameraController(modifier: Modifier = Modifier, onQRCodeScanned: (String) ->
         factory = { context ->
             val previewView = PreviewView(context)
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+            var isScanning = true //Handling delay availability
 
             cameraProviderFuture.addListener(Runnable {
                 val cameraProvider = cameraProviderFuture.get()
@@ -60,8 +63,17 @@ fun CameraController(modifier: Modifier = Modifier, onQRCodeScanned: (String) ->
                         analysis.setAnalyzer(
                             ContextCompat.getMainExecutor(context) ,
                             ImageAnalyzer { qrCodeValue -> //rawValue
-                                Log.d("Result QRcode", "$qrCodeValue") //Logs the QR code text
-                                onQRCodeScanned(qrCodeValue)
+                                if (isScanning) {
+                                    Log.d("Result QRcode", "$qrCodeValue") //Logs the QR code text
+                                    onQRCodeScanned(qrCodeValue)
+                                    isScanning = false //Setting false to activate delay
+
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        delay(5000) //5sec delay after scanning
+                                        isScanning = true
+                                    }
+                                }
+
                             }
                         )
                     }
