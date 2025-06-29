@@ -1,6 +1,7 @@
 package com.example.qrcodescanner
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,11 +23,16 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.qrcodescanner.ui.Pages.NoPermission
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun CameraController(modifier: Modifier = Modifier) {
+fun CameraController(modifier: Modifier = Modifier, onQRCodeScanned: (String) -> Unit) {
     AndroidView(
         modifier = modifier,
         factory = { context ->
@@ -55,6 +61,7 @@ fun CameraController(modifier: Modifier = Modifier) {
                             ContextCompat.getMainExecutor(context) ,
                             ImageAnalyzer { qrCodeValue -> //rawValue
                                 Log.d("Result QRcode", "$qrCodeValue") //Logs the QR code text
+                                onQRCodeScanned(qrCodeValue)
                             }
                         )
                     }
@@ -96,12 +103,26 @@ fun CameraHandler(modifier: Modifier = Modifier) {
     )
 
     if(hasPermission) {
-        CameraController(modifier = modifier)
+        CameraController(modifier = modifier, onQRCodeScanned = { qrCodeValue ->
+            CoroutineScope(Dispatchers.IO).launch {
+                saveQR(context, qrCodeValue)
+            }
+        })
     } else {
         NoPermission(
             onRequestPermission = {
                 permissionsRequest.launch(Manifest.permission.CAMERA)
             }, openDialog = openDialog
         )
+    }
+}
+
+object PreferencesKeys {
+    val QR_CODES = stringPreferencesKey("qr_codes")
+}
+
+suspend fun saveQR(context: Context, qrCode: String) {
+    context.dataStore.edit { preferences ->
+        preferences[PreferencesKeys.QR_CODES] = qrCode
     }
 }

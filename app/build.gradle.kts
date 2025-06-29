@@ -73,5 +73,12 @@ dependencies {
 
     val lifecycle_version = "2.9.1"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    //Navigation
+    val nav_version = "2.9.0"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
 
