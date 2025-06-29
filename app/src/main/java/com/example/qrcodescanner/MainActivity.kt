@@ -2,6 +2,7 @@ package com.example.qrcodescanner
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -46,6 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -55,14 +59,15 @@ import com.example.qrcodescanner.ui.Pages.MainPage
 import com.example.qrcodescanner.ui.theme.QrCodeScannerTheme
 
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "qrCode")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
         setContent {
             val navController = rememberNavController()
-
             QrCodeScannerTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
