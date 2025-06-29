@@ -123,6 +123,12 @@ object PreferencesKeys {
 
 suspend fun saveQR(context: Context, qrCode: String) {
     context.dataStore.edit { preferences ->
-        preferences[PreferencesKeys.QR_CODES] = qrCode
+        val existingCodes = preferences[PreferencesKeys.QR_CODES] ?: ""
+        val updatedCodes = if(existingCodes.isEmpty()) {
+            qrCode
+        } else {
+            "$existingCodes, $qrCode" //Creating coma separated list
+        }
+        preferences[PreferencesKeys.QR_CODES] = updatedCodes
     }
 }
