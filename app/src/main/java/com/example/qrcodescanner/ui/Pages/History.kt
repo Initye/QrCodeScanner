@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +49,7 @@ fun HistoryPage() {
         }
     }
     Column {
+        Header(HeaderText = "History")
         if(qrHistoryText.isEmpty()) {
             Text("No scanned QR codes found")
         } else {
@@ -66,9 +68,9 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .height(40.dp)
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(start = 8.dp),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         Row(
             modifier = modifier,
@@ -77,10 +79,18 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
             Text(
                 text = qrCode,
                 modifier = modifier,
-                color = Color.Black
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.weight(1f))
-            Icon(Icons.Default.PlayArrow, contentDescription = "Open link", modifier = modifier.padding(8.dp).size(12.dp))
+            Icon(
+                Icons.Default.PlayArrow,
+                contentDescription = "Open link",
+                modifier = modifier
+                    .padding(8.dp)
+                    .size(12.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
     HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
