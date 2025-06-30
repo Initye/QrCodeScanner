@@ -27,7 +27,7 @@ import com.example.qrcodescanner.CameraHandler
 @Composable
 fun MainPage() {
     Column(modifier = Modifier.fillMaxSize()) {
-        Header()
+        Header(HeaderText = "QR Scanner")
         CameraHandler(
             modifier = Modifier
                 .fillMaxSize()

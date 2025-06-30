@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,9 +33,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.qrcodescanner.R
 
 @Composable
-fun Header(modifier: Modifier = Modifier) {
+fun Header(modifier: Modifier = Modifier, HeaderText: String) {
     Text(
-        text = stringResource(id = R.string.QrScanner),
+        text = HeaderText,
+        style = MaterialTheme.typography.headlineSmall,
         modifier = modifier
             .height(50.dp)
             .fillMaxWidth()
@@ -60,15 +63,15 @@ fun BottomNav(navController: NavController, modifier: Modifier = Modifier) {
 @Composable
 fun BottomNavItem(icon: ImageVector, text: Int, description: Int, onClick: () -> Unit ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
-        Icon(icon, contentDescription = stringResource(id = description))
-        Text(text = stringResource(id = text))
+        Icon(icon, contentDescription = stringResource(id = description), modifier = Modifier.size(24.dp))
+        Text(text = stringResource(id = text), style = MaterialTheme.typography.labelMedium)
     }
 }
 
 @Preview
 @Composable
 fun HeaderPreview() {
-    Header()
+    Header(HeaderText = "")
 }
 
 @Preview

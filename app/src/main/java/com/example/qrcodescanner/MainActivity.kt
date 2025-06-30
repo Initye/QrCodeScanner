@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +14,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -53,22 +56,29 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.AppTheme
 import com.example.qrcodescanner.ui.Pages.BottomNav
 import com.example.qrcodescanner.ui.Pages.HistoryPage
 import com.example.qrcodescanner.ui.Pages.MainPage
-import com.example.qrcodescanner.ui.theme.QrCodeScannerTheme
+
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "qrCode")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        AppCompatDelegate.setDefaultNightMode(
+            if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
         setContent {
             val navController = rememberNavController()
-            QrCodeScannerTheme {
+            AppTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = true) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar =  { BottomNav(navController = navController, modifier = Modifier.navigationBarsPadding()) }
