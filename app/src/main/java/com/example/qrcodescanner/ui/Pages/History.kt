@@ -33,6 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.example.qrcodescanner.PreferencesKeys
 import com.example.qrcodescanner.dataStore
@@ -76,11 +82,33 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val trimmedQRLink = qrCode.trim()
+            val annotatedText = if(trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")) {
+                    buildAnnotatedString {
+                        withLink(
+                            LinkAnnotation.Url(
+                                qrCode.trim(), //Using trim because of how QR codes are scanning
+                                TextLinkStyles(style = SpanStyle(color = Color.Blue))
+                            )
+                        ) {
+                            append(qrCode)
+                        }
+                    }
+            } else {
+                AnnotatedString(qrCode)
+            }
+
+            val textColor = if(trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")) {
+                Color.Unspecified
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
+
             Text(
-                text = qrCode,
+                text = annotatedText,
                 modifier = modifier,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = textColor
             )
             Spacer(Modifier.weight(1f))
             Icon(
