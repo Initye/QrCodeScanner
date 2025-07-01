@@ -1,6 +1,9 @@
 package com.example.qrcodescanner.ui.Pages
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +44,7 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.example.qrcodescanner.PreferencesKeys
@@ -70,59 +77,72 @@ fun HistoryPage() {
 
 @Composable
 fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
-    Box(
+    var isExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val trimmedQRLink = qrCode.trim()
+    val isUrl = trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")
+    Column(
         modifier = modifier
-            .height(40.dp)
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(start = 8.dp),
-        contentAlignment = Alignment.CenterStart,
+            .padding(horizontal = 8.dp, vertical = 12.dp)
+            .clickable(onClick = { isExpanded = !isExpanded }),
     ) {
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val trimmedQRLink = qrCode.trim()
-            val annotatedText = if(trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")) {
-                    buildAnnotatedString {
-                        withLink(
-                            LinkAnnotation.Url(
-                                qrCode.trim(), //Using trim because of how QR codes are scanning
-                                TextLinkStyles(style = SpanStyle(color = Color.Blue))
-                            )
-                        ) {
-                            append(qrCode)
-                        }
-                    }
-            } else {
-                AnnotatedString(qrCode)
-            }
-
-            val textColor = if(trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")) {
-                Color.Unspecified
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
-
-            Text(
-                text = annotatedText,
+        Column {
+            Row(
                 modifier = modifier,
-                style = MaterialTheme.typography.bodyMedium,
-                color = textColor
-            )
-            Spacer(Modifier.weight(1f))
-            Icon(
-                Icons.Default.PlayArrow,
-                contentDescription = "Open link",
-                modifier = modifier
-                    .padding(8.dp)
-                    .size(12.dp),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isUrl) {
+                    Text(
+                        text = buildAnnotatedString {
+                            withLink(
+                                LinkAnnotation.Url(
+                                    trimmedQRLink, //Using trim because of how QR codes are scanning
+                                    TextLinkStyles(style = SpanStyle(color = Color.Blue))
+                                )
+                            ) {
+                                append(trimmedQRLink)
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                } else {
+                    Text(
+                        text = trimmedQRLink,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    Icons.Default.PlayArrow,
+                    contentDescription = "Open link",
+                    modifier = modifier
+                        .padding(8.dp)
+                        .size(12.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+        AnimatedVisibility(visible = isExpanded) {
+            Column {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
     HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
 }
+
 
 @Composable
 @Preview
