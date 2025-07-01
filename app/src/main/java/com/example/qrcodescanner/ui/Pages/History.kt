@@ -82,12 +82,16 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
     }
     val trimmedQRLink = qrCode.trim()
     val isUrl = trimmedQRLink.startsWith("https://") || trimmedQRLink.startsWith("http://")
+    val clickableModifier = if (!isUrl) {
+        Modifier.clickable { isExpanded = !isExpanded }
+    } else { Modifier } //If it's Url then don't expand else proceed
     Column(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 8.dp, vertical = 12.dp)
-            .clickable(onClick = { isExpanded = !isExpanded }),
+            .then (clickableModifier)
+//            .clickable(onClick = { isExpanded = !isExpanded }),
     ) {
         Column {
             Row(
