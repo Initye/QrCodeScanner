@@ -141,6 +141,6 @@ suspend fun saveQR(context: Context, qrCode: String) {
         } else {
             "$existingCodes, $qrCode" //Creating coma separated list
         }
-        preferences[PreferencesKeys.QR_CODES] = updatedCodes
+        preferences[PreferencesKeys.QR_CODES] = updatedCodes.toString()
     }
 }

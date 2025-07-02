@@ -56,7 +56,7 @@ fun BottomNav(navController: NavController, modifier: Modifier = Modifier) {
     ) {
         BottomNavItem(Icons.Default.AddCircle, R.string.QrScanner, R.string.QrScanner, onClick = { navController.navigate("mainPage"); ; Log.d("Navigation", "mainPage") })
         BottomNavItem(Icons.Default.ArrowDropDown, R.string.History, R.string.History, onClick = { navController.navigate("historyPage"); Log.d("Navigation", "History") })
-        BottomNavItem(Icons.Default.Settings, R.string.Settings, R.string.Settings, onClick = {})
+        BottomNavItem(Icons.Default.Settings, R.string.Settings, R.string.Settings, onClick = { navController.navigate("settingsPage"); Log.d("Navigation", "Settings")})
     }
 }
 
