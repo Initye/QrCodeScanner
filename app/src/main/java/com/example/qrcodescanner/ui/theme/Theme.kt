@@ -257,7 +257,7 @@ data class ColorFamily(
 fun AppTheme(
     darkTheme: Boolean = (LocalConfiguration.current.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES,
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    content: @Composable() () -> Unit,
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
