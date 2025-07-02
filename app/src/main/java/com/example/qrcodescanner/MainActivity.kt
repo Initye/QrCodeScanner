@@ -60,8 +60,10 @@ import com.example.compose.AppTheme
 import com.example.qrcodescanner.ui.Pages.BottomNav
 import com.example.qrcodescanner.ui.Pages.HistoryPage
 import com.example.qrcodescanner.ui.Pages.MainPage
-
-
+import com.example.qrcodescanner.ui.Pages.SettingsPage
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "qrCode")
 class MainActivity : ComponentActivity() {
@@ -77,8 +79,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
         setContent {
+            var isDark by rememberSaveable { mutableStateOf(false)}
             val navController = rememberNavController()
-            AppTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = true) {
+            AppTheme(darkTheme = isDark, dynamicColor = true) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar =  { BottomNav(navController = navController, modifier = Modifier.navigationBarsPadding()) }
@@ -86,6 +89,10 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "mainPage", modifier = Modifier.padding(innerPadding)) {
                         composable("mainPage") { MainPage() }
                         composable("historyPage") { HistoryPage() }
+                        composable("settingsPage") { SettingsPage(
+                            isDark = isDark,
+                            onThemeChange = { isDark = it }
+                        ) }
                     }
                 }
             }
