@@ -11,11 +11,14 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import com.example.qrcodescanner.ui.SettingsRepository
 import com.example.ui.theme.AppTypography
+import androidx.compose.runtime.getValue
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -255,16 +258,17 @@ data class ColorFamily(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = (LocalConfiguration.current.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES,
+    settingsRepository: SettingsRepository,
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit,
 ) {
+    val isDarkTheme by settingsRepository.isDarkTheme.collectAsState(initial = false)
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> darkScheme
+        isDarkTheme -> darkScheme
         else -> lightScheme
     }
 

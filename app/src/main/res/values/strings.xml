@@ -6,4 +6,6 @@
     <string name="History">History</string>
     <string name="Settings">Settings</string>
     <string name="GrantPermission">Grant Permission</string>
+    <string name="SwitchThemeDark">Switch to Dark</string>
+    <string name="SwitchThemeLight">Switch to Light</string>
 </resources>
