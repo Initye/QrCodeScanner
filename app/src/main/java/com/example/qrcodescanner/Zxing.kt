@@ -12,14 +12,6 @@ import com.google.mlkit.vision.barcode.ZoomSuggestionOptions
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
-fun ZXing() {
-    val options = BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(
-            Barcode.FORMAT_QR_CODE,
-            Barcode.FORMAT_AZTEC
-        )
-        .build()
-}
 
 class ImageAnalyzer(
     private val onBarcodeDetected: (String) -> Unit

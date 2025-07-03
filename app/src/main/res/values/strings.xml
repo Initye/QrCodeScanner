@@ -8,4 +8,5 @@
     <string name="GrantPermission">Grant Permission</string>
     <string name="SwitchThemeDark">Switch to Dark</string>
     <string name="SwitchThemeLight">Switch to Light</string>
+    <string name="NoHistoryFound">No scanned QR codes found</string>
 </resources>
