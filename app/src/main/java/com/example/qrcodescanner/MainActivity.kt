@@ -40,6 +40,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -62,26 +63,28 @@ import com.example.qrcodescanner.ui.Pages.HistoryPage
 import com.example.qrcodescanner.ui.Pages.MainPage
 import com.example.qrcodescanner.ui.Pages.SettingsPage
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.example.qrcodescanner.ui.SettingsRepository
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "qrCode")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(
-            if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
         setContent {
-            var isDark by rememberSaveable { mutableStateOf(false)}
+            val context = LocalContext.current
+            val settingsRepository = remember { SettingsRepository(context) }
+            val isDarkTheme by settingsRepository.isDarkTheme.collectAsState(initial = false)
+            val coroutineScope = rememberCoroutineScope()
             val navController = rememberNavController()
-            AppTheme(darkTheme = isDark, dynamicColor = true) {
+
+            AppTheme(settingsRepository = settingsRepository, dynamicColor = true) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar =  { BottomNav(navController = navController, modifier = Modifier.navigationBarsPadding()) }
@@ -90,8 +93,10 @@ class MainActivity : ComponentActivity() {
                         composable("mainPage") { MainPage() }
                         composable("historyPage") { HistoryPage() }
                         composable("settingsPage") { SettingsPage(
-                            isDark = isDark,
-                            onThemeChange = { isDark = it }
+                            isDark = isDarkTheme,
+                            onThemeChange = { isDark ->
+                                coroutineScope.launch { settingsRepository.setDarkTheme(isDark) }
+                            }
                         ) }
                     }
                 }
