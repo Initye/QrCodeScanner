@@ -1,7 +1,8 @@
 package com.example.qrcodescanner.ui.Pages
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,30 +17,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -47,11 +49,16 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.edit
 import com.example.qrcodescanner.PreferencesKeys
-import com.example.qrcodescanner.dataStore
+import com.example.qrcodescanner.ui.dataStore
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.example.qrcodescanner.R
 
 @Composable
-fun HistoryPage() {
+fun HistoryPage(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var qrHistoryText by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -61,10 +68,18 @@ fun HistoryPage() {
             qrHistoryText = if (codes.isEmpty()) emptyList() else codes.split(",")
         }
     }
-    Column {
-        Header(HeaderText = "History")
+    Column() {
+        Box() {
+            Header(HeaderText = "History")
+            DeleteHistoryElement(modifier = Modifier.align(Alignment.TopEnd))
+        }
         if(qrHistoryText.isEmpty()) {
-            Text("No scanned QR codes found")
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = stringResource(id = R.string.NoHistoryFound),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         } else {
             LazyColumn {
                 items(qrHistoryText) { qrCode ->
@@ -74,7 +89,23 @@ fun HistoryPage() {
         }
     }
 }
+@Composable
+fun DeleteHistoryElement(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var qrHistoryText by remember { mutableStateOf<List<String>>(emptyList()) }
 
+    IconButton(onClick = { coroutineScope.launch {
+        deleteHistory(context)
+        Log.d("HistoryPage", "History Cleared")
+        qrHistoryText = emptyList() }},
+            modifier = modifier) {
+        Icon(
+            imageVector =  Icons.Default.Delete,
+            contentDescription = ""
+        )
+    }
+}
 @Composable
 fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
     var isExpanded by rememberSaveable {
@@ -90,8 +121,7 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 8.dp, vertical = 12.dp)
-            .then (clickableModifier)
-//            .clickable(onClick = { isExpanded = !isExpanded }),
+            .then(clickableModifier)
     ) {
         Column {
             Row(
@@ -147,6 +177,10 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
     HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
 }
 
+//Deleting the history of QR codes
+suspend fun deleteHistory(context: Context) {
+    context.dataStore.edit { it.clear() }
+}
 
 @Composable
 @Preview

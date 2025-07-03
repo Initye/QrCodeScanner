@@ -64,7 +64,7 @@ fun HeadlineSetting(SettingsText: String) {
 @Preview
 fun SettingsPagePreview() {
     SettingsPage(
-        isDark = true,
+        isDark = false,
         onThemeChange = {}
     )
 }
