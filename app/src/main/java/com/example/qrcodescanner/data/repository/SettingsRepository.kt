@@ -1,17 +1,11 @@
-package com.example.qrcodescanner.ui
+package com.example.qrcodescanner.data.repository
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
+import com.example.qrcodescanner.data.storage.THEME_KEY
+import com.example.qrcodescanner.data.storage.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-val THEME_KEY = booleanPreferencesKey("dark_theme_enabled")
 
 class SettingsRepository(private val context: Context) {
     private val dataStore = context.dataStore

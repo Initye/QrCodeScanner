@@ -50,12 +50,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
-import com.example.qrcodescanner.PreferencesKeys
-import com.example.qrcodescanner.ui.dataStore
+
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.qrcodescanner.R
+import com.example.qrcodescanner.data.storage.dataStore
+import com.example.qrcodescanner.utils.PreferencesKeys
+import com.example.qrcodescanner.utils.deleteHistory
 
 @Composable
 fun HistoryPage(modifier: Modifier = Modifier) {
@@ -177,10 +179,6 @@ fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
     HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
 }
 
-//Deleting the history of QR codes
-suspend fun deleteHistory(context: Context) {
-    context.dataStore.edit { it.clear() }
-}
 
 @Composable
 @Preview
