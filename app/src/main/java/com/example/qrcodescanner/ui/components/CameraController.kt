@@ -1,7 +1,6 @@
-package com.example.qrcodescanner
+package com.example.qrcodescanner.ui.components
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,8 +10,6 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.core.tween
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,11 +21,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.qrcodescanner.utils.ImageAnalyzer
 import com.example.qrcodescanner.ui.Pages.NoPermission
-import com.example.qrcodescanner.ui.dataStore
+import com.example.qrcodescanner.utils.saveQR
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -126,22 +121,6 @@ fun CameraHandler(modifier: Modifier = Modifier) {
                 permissionsRequest.launch(Manifest.permission.CAMERA)
             }, openDialog = openDialog
         )
-    }
-}
-
-object PreferencesKeys {
-    val QR_CODES = stringPreferencesKey("qr_codes")
-}
-
-suspend fun saveQR(context: Context, qrCode: String) {
-    context.dataStore.edit { preferences ->
-        val existingCodes = preferences[PreferencesKeys.QR_CODES] ?: ""
-        val updatedCodes = if(existingCodes.isEmpty()) {
-            qrCode
-        } else {
-            "$existingCodes, $qrCode" //Creating coma separated list
-        }
-        preferences[PreferencesKeys.QR_CODES] = updatedCodes.toString()
     }
 }
 
