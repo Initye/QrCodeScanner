@@ -27,7 +27,7 @@ import com.example.qrcodescanner.ui.Pages.MainPage
 import com.example.qrcodescanner.ui.Pages.SettingsPage
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import com.example.qrcodescanner.ui.SettingsRepository
+import com.example.qrcodescanner.data.repository.SettingsRepository
 import kotlinx.coroutines.launch
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "qrCode")
