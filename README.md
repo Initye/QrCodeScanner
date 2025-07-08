@@ -6,14 +6,14 @@ Built entirely with Jetpack Compose for a modern and responsive interface.
 
 ## ✨ Features
 
-- 📷 **QR Code Scanning**
+ ### 📷 **QR Code Scanning**
   Quickly scan QR codes using your device's camera.
-- 🕘 **Scan History**
+### 🕘 **Scan History**
   All scanned codes are saved locally using **DataStore**.
-- 🧹 **Clear History**
+### 🧹 **Clear History**
   Easily delete all saved QR codes with a single tap.
-- 🌓 **Dark/Light Theme Support**
-- Users can switch between dark and light mode. The selected theme is saved persistently.
+### 🌓 **Dark/Light Theme Support**
+  Users can switch between dark and light mode. 
   
 ## 🧰 Tech Stack
 
