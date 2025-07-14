@@ -1,6 +1,8 @@
 package com.example.qrcodescanner.utils
 
 import android.util.Log
+import androidx.compose.ui.geometry.Size
+
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -12,7 +14,7 @@ import com.google.mlkit.vision.common.InputImage
 
 
 class ImageAnalyzer(
-    private val onBarcodeDetected: (String) -> Unit
+    private val onBarcodeDetected: (String, List<Barcode>, Size) -> Unit
 ) : ImageAnalysis.Analyzer {
         private val scanner  = BarcodeScanning.getClient(
             BarcodeScannerOptions.Builder()
@@ -28,13 +30,14 @@ class ImageAnalyzer(
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+            val imageSize = Size(mediaImage.width.toFloat(), mediaImage.height.toFloat())
 
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     for (barcode in barcodes) {
                         val rawValue = barcode.rawValue //qr code text
                         if (rawValue != null) {
-                            onBarcodeDetected(rawValue)
+                            onBarcodeDetected(rawValue, barcodes, imageSize)
                         }
                     }
                 }
