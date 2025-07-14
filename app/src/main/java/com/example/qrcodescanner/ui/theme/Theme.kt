@@ -10,9 +10,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.example.qrcodescanner.ui.SettingsRepository
 import com.example.ui.theme.AppTypography
 import androidx.compose.runtime.getValue
+import com.example.qrcodescanner.data.repository.SettingsRepository
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
