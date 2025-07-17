@@ -114,7 +114,6 @@ fun CameraController(modifier: Modifier = Modifier, onQRCodeScanned: (String) ->
                 previewView
             },
         )
-        DrawRectangle(rect = boundingRect)
     }
 }
 
@@ -149,20 +148,5 @@ fun CameraHandler(modifier: Modifier = Modifier) {
                 permissionsRequest.launch(Manifest.permission.CAMERA)
             }, openDialog = openDialog
         )
-    }
-}
-
-@Composable
-fun DrawRectangle(rect: Rect?) {
-    val composeRect = rect?.toComposeRect()
-    composeRect?.let {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRect(
-                color = Color.Red,
-                topLeft = Offset(it.left, it.top),
-                size = Size(it.width, it.height),
-                style = Stroke(width = 5f)
-            )
-        }
     }
 }
