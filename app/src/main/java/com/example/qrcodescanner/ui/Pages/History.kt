@@ -108,6 +108,7 @@ fun DeleteHistoryElement(modifier: Modifier = Modifier) {
         )
     }
 }
+
 @Composable
 fun HistoryElement(qrCode: String, modifier: Modifier = Modifier) {
     var isExpanded by rememberSaveable {

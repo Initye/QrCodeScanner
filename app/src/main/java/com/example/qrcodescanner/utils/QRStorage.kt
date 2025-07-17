@@ -7,7 +7,9 @@ import com.example.qrcodescanner.data.storage.dataStore
 
 //Deleting the history of QR codes
 suspend fun deleteHistory(context: Context) {
-    context.dataStore.edit { it.clear() }
+    context.dataStore.edit { preferences ->
+        preferences.remove(PreferencesKeys.QR_CODES)
+    }
 }
 
 object PreferencesKeys {
