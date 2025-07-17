@@ -41,4 +41,3 @@ Built entirely with Jetpack Compose for a modern and responsive interface.
 ## 📋 Requirements
 - Android 6.0 (API level 23) or higher
 - Camera permission
-
