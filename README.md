@@ -15,7 +15,7 @@ Built entirely with Jetpack Compose for a modern and responsive interface.
 ###  **Dark/Light Theme Support**
   Users can switch between dark and light mode. 
 
-  # 📱 Screenshots
+  #  Screenshots
   <p float="left"> 
    <img src="https://github.com/user-attachments/assets/08819856-c664-421f-972c-3e7d7b54cf27" alt="QR Code Scan Black theme" width="250" height="500"/> 
    <img src="https://github.com/user-attachments/assets/c46d682d-508d-4e4c-98f8-83809c7d258f" alt="QR Code history Black Theme" width="250" height="500"/> 
