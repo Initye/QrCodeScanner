@@ -1,18 +1,18 @@
-# QR Scanner App 📱🔍
+# QR Scanner App 
 
 A modern Android application built with **Kotlin** and **Jetpack Compose** that allows users to scan QR codes and view scan history.
 Built entirely with Jetpack Compose for a modern and responsive interface.
 
 
-## ✨ Features
+##  Features
 
- ### 📷 **QR Code Scanning**
+ ###  **QR Code Scanning**
   Quickly scan QR codes using your device's camera.
-### 🕘 **Scan History**
+###  **Scan History**
   All scanned codes are saved locally using **DataStore**.
-### 🧹 **Clear History**
+### **Clear History**
   Easily delete all saved QR codes with a single tap.
-### 🌓 **Dark/Light Theme Support**
+###  **Dark/Light Theme Support**
   Users can switch between dark and light mode. 
 
   # 📱 Screenshots
@@ -24,7 +24,7 @@ Built entirely with Jetpack Compose for a modern and responsive interface.
    <img src="https://github.com/user-attachments/assets/df1a7e60-b0de-4dd0-8203-66648818f05b" alt="QR Code history Black Theme" width="250" height="500"/> 
   </p>
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 - **Kotlin**
 - **Jetpack Compose**
@@ -33,11 +33,11 @@ Built entirely with Jetpack Compose for a modern and responsive interface.
 - **Material 3**
 - **Coroutines**
 
-## 🚀 Installation
+##  Installation
 1. Clone the repository
 2. Open in Android Studio
 3. Build and run on your device
 
-## 📋 Requirements
+##  Requirements
 - Android 6.0 (API level 23) or higher
 - Camera permission
